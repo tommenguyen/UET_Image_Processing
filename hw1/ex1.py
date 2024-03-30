@@ -1,21 +1,25 @@
 import cv2 
 import matplotlib.pyplot as plt
-
+import numpy as np
 
 # Load an image from file as function
 def load_image(image_path):
     """
     Load an image from file, using OpenCV
     """
-    pass
+    image = cv2.imread(image_path)
+    # image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+    return image
 
 # Display an image as function
 def display_image(image, title="Image"):
     """
-    Display an image using matplotlib. Rembember to use plt.show() to display the image
+    Display an image using matplotlib. Remember to use plt.show() to display the image
     """
-    pass
-
+    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+    plt.imshow(image)
+    plt.title(title)
+    plt.show()
 
 # grayscale an image as function
 def grayscale_image(image):
@@ -27,7 +31,25 @@ def grayscale_image(image):
     Where the R, G, B are the values for each of the corresponding channels. We will do this by
     creating an array called img_gray with the same shape as img
     """
-    pass
+    # Get the shape of the image
+    height, width = image.shape[:2]
+    
+    # Create an array to store the grayscale image
+    img_gray = np.zeros((height, width), dtype=np.uint8)
+    
+    # Loop over the image and calculate the grayscale value for each pixel
+    for i in range(height):
+        for j in range(width):
+            # Get the pixel value
+            pixel = image[i, j]
+            
+            # Calculate the grayscale value
+            gray = 0.299 * pixel[0] + 0.587 * pixel[1] + 0.114 * pixel[2]
+            
+            # Store the grayscale value in the img_gray array
+            img_gray[i, j] = gray
+    
+    return img_gray
 
 
 # Save an image as function
@@ -35,7 +57,7 @@ def save_image(image, output_path):
     """
     Save an image to file using OpenCV
     """
-    pass
+    cv2.imwrite(output_path, image)
 
 
 # flip an image as function 
@@ -43,7 +65,10 @@ def flip_image(image):
     """
     Flip an image horizontally using OpenCV
     """
-    pass
+    # Use the flip function from OpenCV to flip the image horizontally
+    flipped_image = cv2.flip(image, 1)
+    
+    return flipped_image
 
 
 # rotate an image as function
@@ -51,12 +76,24 @@ def rotate_image(image, angle):
     """
     Rotate an image using OpenCV. The angle is in degrees
     """
-    pass
+    # Get the shape of the image
+    height, width = image.shape[:2]
+    
+    # Calculate the center of the image
+    center = (width // 2, height // 2)
+    
+    # Define the rotation matrix
+    rotation_matrix = cv2.getRotationMatrix2D(center, angle, 1.0)
+    
+    # Apply the rotation to the image
+    rotated_image = cv2.warpAffine(image, rotation_matrix, (width, height))
+    
+    return rotated_image
 
 
 if __name__ == "__main__":
     # Load an image from file
-    img = load_image("images/uet.png")
+    img = load_image("uet.png")
 
     # Display the image
     display_image(img, "Original Image")
